@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>مشغل HLS مباشر</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <style>
+    body {
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    video {
+      width: 80%;
+      max-width: 900px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #000;
+    }
+  </style>
+</head>
+<body>
+
+<video id="player" controls playsinline></video>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+<script>
+  const video = document.getElementById('player');
+  const source = "https://player.odycdn.com/v6/streams/1bdecaf5f87b0d8800ceb87fc371810f3b8c3cc1/c9ca6edb54e60f26f5084bfc6f5963663e1eaf8b959a4901d0ac41f09d93d2ab88315a21d13b253363c44055674098e1/master.m3u8";
+
+  if (Hls.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(source);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+      video.play();
+    });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = source;
+    video.addEventListener('loadedmetadata', function () {
+      video.play();
+    });
+  }
+
+  const player = new Plyr(video, {
+    controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+  });
+</script>
+
+</body>
+</html>
